@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: portraitfr_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: portraitfr
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - portraitfr-net
+
+  backend:
+    build: ./Backend/PortraitFr.API
+    container_name: portraitfr_backend
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Database=portraitfr;Username=postgres;Password=password
+    ports:
+      - "5010:80"
+    volumes:
+      - ./Backend/PortraitFr.API/wwwroot/photos:/app/wwwroot/photos
+    networks:
+      - portraitfr-net
+
+  frontend:
+    build: ./Frontend/portraitfr-frontend
+    container_name: portraitfr_frontend
+    ports:
+      - "5011:3000"
+    networks:
+      - portraitfr-net
+
+  migration:
+    build:
+      context: ./Backend/PortraitFr.API
+      dockerfile: Dockerfile.migration
+    container_name: portraitfr_migration
+    depends_on:
+      - db
+    working_dir: /app
+    volumes:
+      - ./Backend/PortraitFr.API:/app
+    command: >
+      dotnet ef database update --project PortraitFr.API.csproj --startup-project PortraitFr.API.csproj --verbose
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=portraitfr;Username=postgres;Password=password
+    networks:
+      - portraitfr-net
+
+volumes:
+  db_data:
+
+networks:
+  portraitfr-net:
+    driver: bridge

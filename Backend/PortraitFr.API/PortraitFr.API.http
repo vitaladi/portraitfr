@@ -1,0 +1,6 @@
+@PortraitFr.API_HostAddress = http://localhost:5270
+
+GET {{PortraitFr.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

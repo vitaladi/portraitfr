@@ -1,0 +1,109 @@
+{
+  "Files": [
+    {
+      "Id": "/app/wwwroot/photos/4c3ed940-9d1b-40b8-bba2-5ccb6160eec0.png",
+      "PackagePath": "staticwebassets/photos/4c3ed940-9d1b-40b8-bba2-5ccb6160eec0.png"
+    },
+    {
+      "Id": "/app/wwwroot/photos/68acfeb7-f42e-43df-a3d1-be4287908a94.png",
+      "PackagePath": "staticwebassets/photos/68acfeb7-f42e-43df-a3d1-be4287908a94.png"
+    },
+    {
+      "Id": "/app/wwwroot/photos/ameli67_20250406_195646.jpg",
+      "PackagePath": "staticwebassets/photos/ameli67_20250406_195646.jpg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/b3a325ad-36a1-49fe-b613-a20cfedb9687.png",
+      "PackagePath": "staticwebassets/photos/b3a325ad-36a1-49fe-b613-a20cfedb9687.png"
+    },
+    {
+      "Id": "/app/wwwroot/photos/ee1ec88d-d136-4d5f-9caf-53bb0fb84573.JPG",
+      "PackagePath": "staticwebassets/photos/ee1ec88d-d136-4d5f-9caf-53bb0fb84573.JPG"
+    },
+    {
+      "Id": "/app/wwwroot/photos/gexen_20250406_203329.jpeg",
+      "PackagePath": "staticwebassets/photos/gexen_20250406_203329.jpeg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/gracias_20250407_221900.jpg",
+      "PackagePath": "staticwebassets/photos/gracias_20250407_221900.jpg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/gwenji_20250406_153328.png",
+      "PackagePath": "staticwebassets/photos/gwenji_20250406_153328.png"
+    },
+    {
+      "Id": "/app/wwwroot/photos/gwenvisual_20250406_151005.jpg",
+      "PackagePath": "staticwebassets/photos/gwenvisual_20250406_151005.jpg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/marie123_20250406_203757.png",
+      "PackagePath": "staticwebassets/photos/marie123_20250406_203757.png"
+    },
+    {
+      "Id": "/app/wwwroot/photos/moise1_20250406_151249.jpeg",
+      "PackagePath": "staticwebassets/photos/moise1_20250406_151249.jpeg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/rth_20250408_163738.jpg",
+      "PackagePath": "staticwebassets/photos/rth_20250408_163738.jpg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/tuh_20250406_160729.jpeg",
+      "PackagePath": "staticwebassets/photos/tuh_20250406_160729.jpeg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/ubub123_20250406_174217.png",
+      "PackagePath": "staticwebassets/photos/ubub123_20250406_174217.png"
+    },
+    {
+      "Id": "/app/wwwroot/photos/vchvbhe_20250406_183006.png",
+      "PackagePath": "staticwebassets/photos/vchvbhe_20250406_183006.png"
+    },
+    {
+      "Id": "/app/wwwroot/photos/vital.adi1_20250407_221030.jpg",
+      "PackagePath": "staticwebassets/photos/vital.adi1_20250407_221030.jpg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/vital.adi_20250407_215420.jpg",
+      "PackagePath": "staticwebassets/photos/vital.adi_20250407_215420.jpg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/vital123_20250406_150730.jpg",
+      "PackagePath": "staticwebassets/photos/vital123_20250406_150730.jpg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/vitouuuu_20250402_064813.jpeg",
+      "PackagePath": "staticwebassets/photos/vitouuuu_20250402_064813.jpeg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/yoniu_20250407_185609.jpeg",
+      "PackagePath": "staticwebassets/photos/yoniu_20250407_185609.jpeg"
+    },
+    {
+      "Id": "/app/wwwroot/photos/zfzef_20250406_201107.jpeg",
+      "PackagePath": "staticwebassets/photos/zfzef_20250406_201107.jpeg"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.PortraitFr.API.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.PortraitFr.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.build.PortraitFr.API.props",
+      "PackagePath": "build\\PortraitFr.API.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildMultiTargeting.PortraitFr.API.props",
+      "PackagePath": "buildMultiTargeting\\PortraitFr.API.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildTransitive.PortraitFr.API.props",
+      "PackagePath": "buildTransitive\\PortraitFr.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

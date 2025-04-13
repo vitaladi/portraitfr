@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortraitFr.API", "Backend\PortraitFr.API\PortraitFr.API.csproj", "{B720B34E-63C4-1C62-4435-F7AC7F778931}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B720B34E-63C4-1C62-4435-F7AC7F778931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B720B34E-63C4-1C62-4435-F7AC7F778931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B720B34E-63C4-1C62-4435-F7AC7F778931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B720B34E-63C4-1C62-4435-F7AC7F778931}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B720B34E-63C4-1C62-4435-F7AC7F778931} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {693EA3F2-1E45-49BA-9878-294DB9B8928F}
+	EndGlobalSection
+EndGlobal
