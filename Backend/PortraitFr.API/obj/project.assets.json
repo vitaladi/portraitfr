@@ -3270,11 +3270,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/app/PortraitFr.API.csproj",
+      "projectUniqueName": "/src/PortraitFr.API.csproj",
       "projectName": "PortraitFr.API",
-      "projectPath": "/app/PortraitFr.API.csproj",
+      "projectPath": "/src/PortraitFr.API.csproj",
       "packagesPath": "/root/.nuget/packages/",
-      "outputPath": "/app/obj/",
+      "outputPath": "/src/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/root/.nuget/NuGet/NuGet.Config"
@@ -3355,7 +3355,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
