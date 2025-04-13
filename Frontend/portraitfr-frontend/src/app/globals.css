@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#0a0a0a] text-white; /* Solution temporaire avec la valeur hexadécimale */
+    font-family: var(--font-geist-sans), sans-serif;
+  }
+}
