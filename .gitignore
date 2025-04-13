@@ -1,14 +1,43 @@
-# Node
-node_modules/
-.next/
-dist/
-
-# Logs
+# === GLOBAL ===
+.DS_Store
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
 *.log
-
-# Env
 .env
+.env.*
+*.tsbuildinfo
 
-# Docker
-*.pid
-docker-compose.override.yml
+# === BACKEND ===
+**/bin/
+**/obj/
+**/*.user
+**/*.suo
+**/*.csproj.user
+**/*.db
+**/appsettings.*.json
+
+# === FRONTEND ===
+Frontend/portraitfr-frontend/.next
+Frontend/portraitfr-frontend/node_modules
+Frontend/portraitfr-frontend/.env
+Frontend/portraitfr-frontend/.env.*
+Frontend/portraitfr-frontend/out
+Frontend/portraitfr-frontend/build
+Frontend/portraitfr-frontend/.vercel
+
+# === COVERAGE & TEST ===
+coverage/
+*.lcov
+
+# === EDITORS ===
+.vscode/
+.idea/
+*.sw?
+
+# === SYSTEM FILES ===
+Thumbs.db
+ehthumbs.db
+desktop.ini
