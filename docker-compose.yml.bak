@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  portraitfr_db:
+  db:
     image: postgres:16
     container_name: portraitfr_db
     environment:
@@ -15,14 +15,14 @@ services:
     networks:
       - portraitfr-net
 
-  portraitfr_backend:
+  backend:
     build: ./Backend/PortraitFr.API
     container_name: portraitfr_backend
     depends_on:
-      - portraitfr_db
+      - db
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=portraitfr_db;Database=portraitfr;Username=postgres;Password=password
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Database=portraitfr;Username=postgres;Password=password
     ports:
       - "5010:80"
     volumes:
@@ -30,7 +30,7 @@ services:
     networks:
       - portraitfr-net
 
-  portraitfr_frontend:
+  frontend:
     build: ./Frontend/portraitfr-frontend
     container_name: portraitfr_frontend
     ports:
@@ -38,29 +38,20 @@ services:
     networks:
       - portraitfr-net
 
-  portraitfr_migration:
+  migration:
     build:
       context: ./Backend/PortraitFr.API
       dockerfile: Dockerfile.migration
     container_name: portraitfr_migration
     depends_on:
-      - portraitfr_db
+      - db
     working_dir: /app
+    volumes:
+      - ./Backend/PortraitFr.API:/app
+    command: >
+      dotnet ef database update --project PortraitFr.API.csproj --startup-project PortraitFr.API.csproj --verbose
     environment:
-      - ConnectionStrings__DefaultConnection=Host=portraitfr_db;Database=portraitfr;Username=postgres;Password=password
-    networks:
-      - portraitfr-net
-
-  portraitfr_pgadmin:
-    image: dpage/pgadmin4
-    container_name: portraitfr_pgadmin
-    depends_on:
-      - portraitfr_db
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@portraitfr.fr
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "5050:80"
+      - ConnectionStrings__DefaultConnection=Host=db;Database=portraitfr;Username=postgres;Password=password
     networks:
       - portraitfr-net
 

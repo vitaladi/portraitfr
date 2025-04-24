@@ -1,20 +1,18 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS migration
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
-# Crée un répertoire pour l'app
 WORKDIR /app
 
-# Copie tout le code de l'API
 COPY . .
 
-# Restaure les packages
 RUN dotnet restore "PortraitFr.API.csproj"
-
-# Build (pour être sûr que tout est compilé)
 RUN dotnet build "PortraitFr.API.csproj" -c Release
 
-# Réinstalle les outils si besoin
+# Installe dotnet-ef
 RUN dotnet tool install --global dotnet-ef --version 9.0.3
+
+# Chemin vers dotnet tools
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
-# 👉 Ce conteneur lancera cette commande à l’exécution (overridable dans docker-compose)
-ENTRYPOINT ["dotnet-ef"]
+# Applique les migrations
+CMD ["dotnet", "ef", "database", "update"]
+
