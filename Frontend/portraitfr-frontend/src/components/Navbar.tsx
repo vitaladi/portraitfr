@@ -5,9 +5,7 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
-import { label } from "framer-motion/client"
 
-// Items visibles pour le public
 const publicNavItems = [
   { label: "Accueil", href: "/" },
   { label: "Inscription", href: "/participer" },
@@ -16,7 +14,12 @@ const publicNavItems = [
   { label: "Contact", href: "/contact" },
 ]
 
-// Items admin (pour développement ou accès direct)
+const infosDropdownItems = [
+  { label: "FAQ", href: "/infos/faq" },
+  { label: "Awards", href: "/infos/awards" },
+  { label: "Partenaires", href: "/infos/partenaires" },
+]
+
 const adminNavItems = [
   { label: "Participants", href: "/participants" }
 ]
@@ -24,18 +27,17 @@ const adminNavItems = [
 export default function Navbar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const [infosOpen, setInfosOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
 
-  // Option : afficher les items admin seulement en développement
   const showAdminItems = process.env.NODE_ENV === 'development'
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-orange/30 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo avec effet hover */}
           <Link 
             href="/" 
             className="flex items-center space-x-2 group"
@@ -49,20 +51,14 @@ export default function Navbar() {
                 className="object-contain transition-transform duration-300 group-hover:scale-110"
               />
             </div>
-           
           </Link>
 
-          {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-6">
             {publicNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                  pathname === item.href 
-                    ? "text-orange" 
-                    : "text-white hover:text-orange/80"
-                }`}
+                className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 ${pathname === item.href ? "text-orange" : "text-white hover:text-orange/80"}`}
               >
                 {item.label}
                 {pathname === item.href && (
@@ -70,8 +66,28 @@ export default function Navbar() {
                 )}
               </Link>
             ))}
-            
-            {/* Optionnel : Afficher les liens admin en dev */}
+
+            {/* Menu déroulant Infos */}
+            <div className="relative group">
+              <button
+                onClick={() => setInfosOpen(!infosOpen)}
+                className="relative px-3 py-2 text-sm font-medium text-white hover:text-orange/80 transition"
+              >
+                Infos
+              </button>
+              <div className="absolute hidden group-hover:block mt-2 bg-black border border-gray-700 rounded-md shadow-lg min-w-[150px]">
+                {infosDropdownItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="block px-4 py-2 text-sm text-white hover:bg-gray-800"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
             {showAdminItems && adminNavItems.map((item) => (
               <Link
                 key={item.href}
@@ -83,7 +99,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Mobile menu toggle */}
           <button 
             onClick={toggleMenu}
             className="md:hidden p-2 rounded-md text-white hover:text-orange focus:outline-none transition"
@@ -98,7 +113,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile dropdown avec animation */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -114,17 +128,23 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={closeMenu}
-                  className={`block px-3 py-3 rounded-lg text-base font-medium transition ${
-                    pathname === item.href
-                      ? "bg-orange/10 text-orange border-l-4 border-orange"
-                      : "text-white hover:bg-gray-800/50"
-                  }`}
+                  className={`block px-3 py-3 rounded-lg text-base font-medium transition ${pathname === item.href ? "bg-orange/10 text-orange border-l-4 border-orange" : "text-white hover:bg-gray-800/50"}`}
                 >
                   {item.label}
                 </Link>
               ))}
-              
-              {/* Optionnel : Afficher les liens admin en dev */}
+              <div className="border-t border-gray-700 pt-2">
+                {infosDropdownItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="block px-3 py-3 rounded-lg text-base font-medium text-white hover:bg-gray-800/50 transition"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
               {showAdminItems && adminNavItems.map((item) => (
                 <Link
                   key={item.href}

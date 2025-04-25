@@ -288,12 +288,12 @@ export default function ParticipantsPage() {
                     <div
                       className="w-full h-60 relative cursor-pointer group overflow-hidden rounded-xl"
                       onClick={() => setSelectedPhoto({
-                        url: `http://localhost:5010${p.photoUrl}`,
+                        url: `${apiUrl}${p.photoUrl}`,
                         name: p.nom
                       })}
                     >
                       <Image
-                        src={p.photoUrl ? `http://localhost:5010${p.photoUrl}` : "/images/default-avatar.png"}
+                        src={p.photoUrl ? `${apiUrl}${p.photoUrl}` : "/images/default-avatar.png"}
                         alt={p.nom}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -389,7 +389,11 @@ export default function ParticipantsPage() {
                 />
                 <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
                   <button
-                    onClick={() => downloadPhoto(selectedPhoto.url.split('http://localhost:5010')[1], selectedPhoto.name)}
+                    onClick={() => {
+                      const relativePath = selectedPhoto.url.replace(apiUrl!, '')
+                      downloadPhoto(relativePath, selectedPhoto.name)
+                    }}
+                    
                     className="bg-orange text-white px-4 py-2 rounded-full hover:bg-orange-600 transition flex items-center"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
