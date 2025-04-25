@@ -47,7 +47,9 @@ else
     app.UseCors("ProductionCors");
 }
 
-app.UseStaticFiles(); // pour les photos
+app.UseStaticFiles(); // ✅ Sert les fichiers wwwroot
+app.UseRouting();
+app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
 

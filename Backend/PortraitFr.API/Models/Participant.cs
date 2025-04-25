@@ -19,6 +19,7 @@ namespace PortraitFr.API.Models
         [Required]
         public required string Categorie { get; set; }
 
+
         [Required]
         public required string Ville { get; set; }
 
