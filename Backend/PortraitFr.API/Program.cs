@@ -3,22 +3,29 @@ using PortraitFr.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Permet d'exposer l'API sur 0.0.0.0 (utile pour Docker)
+// ✅ Permet d'exposer l'API sur 0.0.0.0 (Docker)
 builder.WebHost.UseUrls("http://0.0.0.0:80");
 
-// 👉 Connexion à PostgreSQL (via docker-compose)
+// 👉 Connexion PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 👉 Ajout des services nécessaires
+// 👉 Ajout des services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 👉 CORS (autorise tout pendant le dev)
+// ✅ CORS : production sécurisé sur testsite.portraitfr.fr
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("ProductionCors", policy =>
+    {
+        policy.WithOrigins("https://testsite.portraitfr.fr")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+
+    options.AddPolicy("DevCors", policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
@@ -28,17 +35,20 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 👉 Middleware
-app.UseCors("AllowAll");
-app.UseStaticFiles(); // pour servir les fichiers uploadés (photos)
-app.UseAuthorization();
-app.MapControllers();
-
-// 👉 Swagger (optionnel pour test API)
+// ✅ Utiliser le bon CORS selon l’environnement
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("DevCors");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseCors("ProductionCors");
+}
+
+app.UseStaticFiles(); // pour les photos
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
