@@ -24,7 +24,7 @@ export default function ParticipantForm() {
 
   useEffect(() => {
     const fetchCount = async () => {
-      const res = await fetch(`${apiUrl}/api/participants`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/participants`)
       const data = await res.json()
       setParticipantCount(data.length)
     }
