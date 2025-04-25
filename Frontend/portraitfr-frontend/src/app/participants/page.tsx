@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
+
 type Participant = {
   id: number
   nom: string
@@ -15,6 +16,8 @@ type Participant = {
 }
 
 const ITEMS_PER_PAGE = 9
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
+
 
 export default function ParticipantsPage() {
   const [allParticipants, setAllParticipants] = useState<Participant[]>([])
@@ -32,7 +35,7 @@ export default function ParticipantsPage() {
     const fetchData = async () => {
       try {
         setIsLoading(true)
-        const res = await fetch('http://localhost:5010/api/participants')
+        const res = await fetch(`${apiUrl}/api/participants`)
         const data = await res.json()
         setAllParticipants(data)
         setFilteredParticipants(data)
@@ -71,7 +74,7 @@ export default function ParticipantsPage() {
   // Télécharger une photo
   const downloadPhoto = async (photoUrl: string, participantName: string) => {
     try {
-      const response = await fetch(`http://localhost:5010${photoUrl}`)
+      const response = await fetch(`${apiUrl}${photoUrl}`)
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function ParticipantForm() {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ export default function ParticipantForm() {
 
   useEffect(() => {
     const fetchCount = async () => {
-      const res = await fetch("http://localhost:5010/api/participants")
+      const res = await fetch(`${apiUrl}/api/participants`)
       const data = await res.json()
       setParticipantCount(data.length)
     }
@@ -75,7 +76,7 @@ export default function ParticipantForm() {
     })
 
     try {
-      const res = await fetch("http://localhost:5010/api/participants", {
+      const res = await fetch(`${apiUrl}/api/participants`, {
         method: "POST",
         body: data,
       })

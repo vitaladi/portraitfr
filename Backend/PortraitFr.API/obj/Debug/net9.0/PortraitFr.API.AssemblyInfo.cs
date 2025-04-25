@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PortraitFr.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38bca5d4417fffda9d45d6fcc2062dcdb13e28be")]
 [assembly: System.Reflection.AssemblyProductAttribute("PortraitFr.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PortraitFr.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
