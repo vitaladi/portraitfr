@@ -41,3 +41,7 @@ coverage/
 Thumbs.db
 ehthumbs.db
 desktop.ini
+Backend/PortraitFr.API/bin/
+Backend/PortraitFr.API/obj/
+docker-compose.yml
+Backend/PortraitFr.API/obj/
