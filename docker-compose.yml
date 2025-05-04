@@ -4,6 +4,7 @@ services:
   portraitfr_db:
     image: postgres:16
     container_name: portraitfr_db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -17,6 +18,7 @@ services:
   portraitfr_backend:
     build: ./Backend/PortraitFr.API
     container_name: portraitfr_backend
+    restart: unless-stopped
     depends_on:
       - portraitfr_db
     environment:
@@ -32,6 +34,7 @@ services:
   portraitfr_frontend:
     build: ./Frontend/portraitfr-frontend
     container_name: portraitfr_frontend
+    restart: unless-stopped
     ports:
       - "5011:3000"
     networks:
@@ -53,6 +56,7 @@ services:
   portraitfr_pgadmin:
     image: dpage/pgadmin4
     container_name: portraitfr_pgadmin
+    restart: unless-stopped
     depends_on:
       - portraitfr_db
     environment:
