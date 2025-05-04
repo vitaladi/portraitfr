@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'standalone',
   images: {
-    domains: ['localhost', 'testsite.portraitfr.fr'],
+    domains: ['localhost', 'awards.portraitfr.fr'],
   },  
   eslint: {
     ignoreDuringBuilds: true,

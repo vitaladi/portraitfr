@@ -15,12 +15,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ✅ CORS : production sécurisé sur testsite.portraitfr.fr
+// ✅ CORS : production sécurisé sur awards.portraitfr.fr
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ProductionCors", policy =>
     {
-        policy.WithOrigins("https://testsite.portraitfr.fr")
+        policy.WithOrigins("https://awards.portraitfr.fr")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
