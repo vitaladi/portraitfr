@@ -7,9 +7,8 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: portraitfr
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - portraitfr_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -65,7 +64,8 @@ services:
       - portraitfr-net
 
 volumes:
-  db_data:
+  portraitfr_data:
+    name: portraitfr_data
 
 networks:
   portraitfr-net:

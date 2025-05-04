@@ -3265,19 +3265,19 @@
     ]
   },
   "packageFolders": {
-    "/root/.nuget/packages/": {}
+    "/Users/vitouswr/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/src/PortraitFr.API.csproj",
+      "projectUniqueName": "/Users/vitouswr/Desktop/WebsitePortraitfr/Backend/PortraitFr.API/PortraitFr.API.csproj",
       "projectName": "PortraitFr.API",
-      "projectPath": "/src/PortraitFr.API.csproj",
-      "packagesPath": "/root/.nuget/packages/",
-      "outputPath": "/src/obj/",
+      "projectPath": "/Users/vitouswr/Desktop/WebsitePortraitfr/Backend/PortraitFr.API/PortraitFr.API.csproj",
+      "packagesPath": "/Users/vitouswr/.nuget/packages/",
+      "outputPath": "/Users/vitouswr/Desktop/WebsitePortraitfr/Backend/PortraitFr.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/root/.nuget/NuGet/NuGet.Config"
+        "/Users/vitouswr/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -3355,7 +3355,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
