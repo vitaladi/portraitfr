@@ -136,8 +136,8 @@ export default function ParticipantForm() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url(/imagePortraitFr/img5.jpg)",
-          filter: "blur(8px)",
+          backgroundImage: "url(/imagePortraitFr/img5.webp",
+          filter: "blur(6px)",
           transform: "scale(1.1)",
         }}
       />

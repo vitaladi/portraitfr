@@ -11,7 +11,7 @@ export default function AwardsPage() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(/imagePortraitFr/img9.jpg)',
+          backgroundImage: 'url(/imagePortraitFr/img20.jpg)',
           filter: 'blur(8px)',
           transform: 'scale(1.1)',
         }}

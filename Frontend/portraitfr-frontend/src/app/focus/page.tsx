@@ -27,7 +27,7 @@ export default function FocusPage() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(/imagePortraitFr/img20.jpg)',
+          backgroundImage: 'url(/imagePortraitFr/img5.webp)',
           filter: 'blur(8px)',
           transform: 'scale(1.1)',
         }}

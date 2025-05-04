@@ -9,7 +9,7 @@ export default function PartenairesPage() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: 'url(/imagePortraitFr/img10.jpg)',
+          backgroundImage: 'url(/imagePortraitFr/img5.webp)',
           filter: 'blur(8px)',
           transform: 'scale(1.1)',
         }}

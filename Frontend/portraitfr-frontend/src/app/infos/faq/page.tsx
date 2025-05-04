@@ -62,7 +62,7 @@ export default function FAQPage() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: 'url(/imagePortraitFr/img17.jpg)',
+          backgroundImage: 'url(/imagePortraitFr/img9.jpg)',
           filter: 'blur(8px)',
           transform: 'scale(1.1)',
         }}

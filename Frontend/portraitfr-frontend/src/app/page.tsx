@@ -2,17 +2,39 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
+import { useEffect, useState } from "react"
 
 export default function HomePage() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    // Vérifie au chargement
+    checkMobile()
+    
+    // Écoute les changements de taille
+    window.addEventListener('resize', checkMobile)
+    
+    // Nettoyage
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Arrière-plan sans flou */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-70"
-        style={{ 
-          backgroundImage: "url(/background.webp)",
-        }}
-      />
+      {/* Arrière-plan conditionnel */}
+      <div className="absolute inset-0 opacity-80">
+        <Image
+          src={isMobile ? "/backgroundmobile.webp" : "/background.webp"}
+          alt="Background"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
       
       {/* Overlay sombre */}
       <div className="absolute inset-0 bg-black/30" />
@@ -32,9 +54,9 @@ export default function HomePage() {
         {/* Texte descriptif centré */}
         <div className="max-w-3xl mx-auto">
           <p className="text-xl md:text-2xl leading-relaxed mb-8">
-            6 Trophées seront remis lors de la première édition de la Cérémonie Portrait Fr Awards. 
-            Les gagnant.e.s de la majorité d'entres elles sont élu.e.s par un vote qui mêle les 
-            membres de PortraitFr, d'un jury de professionnel et du grand public.
+            6 trophées seront remis lors de la première édition de la cérémonie PortraitFr Awards. 
+            Les gagnant·e·s de la majorité d'entre eux/elles sont élu·e·s par un vote mêlant les 
+            membres de PortraitFr, un jury de professionnels et le grand public.
           </p>
 
           {/* Boutons d'action centrés */}
