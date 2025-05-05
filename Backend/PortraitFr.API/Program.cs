@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PortraitFr.API.Data;
-
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient();
 
 // ✅ Permet d'exposer l'API sur 0.0.0.0 (Docker)
 builder.WebHost.UseUrls("http://0.0.0.0:80");
