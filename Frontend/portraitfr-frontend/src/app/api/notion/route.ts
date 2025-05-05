@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server"
 import { Client } from "@notionhq/client"
 
+// Augmente la limite à 10 Mo (valable uniquement en dev/test local)
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "25mb",
+    },
+  },
+}
+
 const notion = new Client({
   auth: process.env.NOTION_SECRET,
 })
@@ -8,9 +17,9 @@ const notion = new Client({
 const databaseId = process.env.NOTION_DATABASE_ID!
 
 export async function POST(req: Request) {
-  const body = await req.json()
-
   try {
+    const body = await req.json()
+
     await notion.pages.create({
       parent: { database_id: databaseId },
       properties: {
@@ -29,13 +38,24 @@ export async function POST(req: Request) {
         Catégorie: {
           select: { name: body.categorie },
         },
-        "Photo URL": {
-          url: body.photoUrl,
-        },
         Autorisation: {
           checkbox: body.autorisationParticipation,
         },
       },
+      children: body.photoUrl
+        ? [
+            {
+              object: "block",
+              type: "image",
+              image: {
+                type: "external",
+                external: {
+                  url: body.photoUrl,
+                },
+              },
+            },
+          ]
+        : [],
     })
 
     return NextResponse.json({ success: true })
