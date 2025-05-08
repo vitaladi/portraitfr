@@ -24,7 +24,6 @@ Frontend/portraitfr-frontend/.next
 Frontend/portraitfr-frontend/node_modules
 Frontend/portraitfr-frontend/.env
 Frontend/portraitfr-frontend/.env.*
-!.env.production
 Frontend/portraitfr-frontend/out
 Frontend/portraitfr-frontend/build
 Frontend/portraitfr-frontend/.vercel

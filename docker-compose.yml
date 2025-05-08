@@ -1,75 +1,25 @@
 version: '3.8'
 
 services:
-  portraitfr_db:
-    image: postgres:16
-    container_name: portraitfr_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    volumes:
-      - portraitfr_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      - portraitfr-net
-
-  portraitfr_backend:
-    build: ./Backend/PortraitFr.API
-    container_name: portraitfr_backend
-    restart: unless-stopped
-    depends_on:
-      - portraitfr_db
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=portraitfr_db;Database=portraitfr;Username=postgres;Password=password
-    ports:
-      - "5010:80"
-    volumes:
-      - ./Backend/PortraitFr.API/wwwroot/photos:/app/wwwroot/photos
-    networks:
-      - portraitfr-net
-
   portraitfr_frontend:
     build: ./Frontend/portraitfr-frontend
     container_name: portraitfr_frontend
     restart: unless-stopped
-    ports:
-      - "5011:3000"
-    networks:
-      - portraitfr-net
-
-  portraitfr_migration:
-    build:
-      context: ./Backend/PortraitFr.API
-      dockerfile: Dockerfile.migration
-    container_name: portraitfr_migration
-    depends_on:
-      - portraitfr_db
-    working_dir: /app
     environment:
-      - ConnectionStrings__DefaultConnection=Host=portraitfr_db;Database=portraitfr;Username=postgres;Password=password
-    networks:
-      - portraitfr-net
-
-  portraitfr_pgadmin:
-    image: dpage/pgadmin4
-    container_name: portraitfr_pgadmin
-    restart: unless-stopped
-    depends_on:
-      - portraitfr_db
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@portraitfr.fr
-      PGADMIN_DEFAULT_PASSWORD: admin123
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
     ports:
-      - "5050:80"
+      - "3000:3000"  # Port standard Next.js
+    volumes:
+      - ./Frontend/portraitfr-frontend:/app
+      - /app/node_modules
     networks:
       - portraitfr-net
-
-volumes:
-  portraitfr_data:
-    name: portraitfr_data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   portraitfr-net:

@@ -137,6 +137,7 @@ export default function NotionForm() {
         <option value="Photographe">Photographe</option>
         <option value="Modèle">Modèle</option>
         <option value="MUA">Maquilleur(se)</option>
+        <option value="Styliste">Projet photo de l'année</option>
       </select>
 
       {/* Upload Photo */}

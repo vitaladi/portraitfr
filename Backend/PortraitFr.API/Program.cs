@@ -48,10 +48,14 @@ else
     app.UseCors("ProductionCors");
 }
 
-app.UseStaticFiles(); // ✅ Sert les fichiers wwwroot
-app.UseRouting();
-app.UseCors("AllowAll");
-app.UseAuthorization();
-app.MapControllers();
-
+// Ajoutez ceci avant app.Run()
+app.MapWhen(ctx => !ctx.Request.Path.StartsWithSegments("/api"), appBuilder => 
+{
+    appBuilder.UseStaticFiles();
+    appBuilder.UseRouting();
+    appBuilder.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+});
 app.Run();

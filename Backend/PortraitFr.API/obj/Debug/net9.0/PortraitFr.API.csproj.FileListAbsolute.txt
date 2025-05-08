@@ -401,3 +401,6 @@
 /src/obj/Debug/net9.0/PortraitFr.API.pdb
 /src/obj/Debug/net9.0/PortraitFr.API.genruntimeconfig.cache
 /src/obj/Debug/net9.0/ref/PortraitFr.API.dll
+/Users/vitouswr/Desktop/WebsitePortraitfr/Backend/PortraitFr.API/bin/Debug/net9.0/appsettings.Production.json
+/Users/vitouswr/Desktop/WebsitePortraitfr/Backend/PortraitFr.API/bin/Debug/net9.0/Newtonsoft.Json.dll
+/Users/vitouswr/Desktop/WebsitePortraitfr/Backend/PortraitFr.API/obj/Debug/net9.0/PortraitFr.API.sourcelink.json
