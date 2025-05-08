@@ -10,6 +10,10 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  api: {
+    bodyParser: false, // obligatoire pour utiliser FormData
+    sizeLimit: '30mb', // facultatif avec FormData mais utile si tu veux le préciser
+  },
 }
 
 module.exports = nextConfig

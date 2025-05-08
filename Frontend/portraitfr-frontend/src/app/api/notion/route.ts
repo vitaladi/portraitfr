@@ -5,7 +5,7 @@ import { Client } from "@notionhq/client"
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "25mb",
+      sizeLimit: "30mb",
     },
   },
 }

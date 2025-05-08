@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 # Copie les variables d’environnement de prod
-COPY .env.production .env.production
+COPY .env.production ./.env.production
 
 RUN npm install
 RUN npm run build
