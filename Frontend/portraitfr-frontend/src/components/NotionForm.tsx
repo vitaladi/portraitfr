@@ -44,56 +44,50 @@ export default function NotionForm() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setMessage("")
-    setIsSubmitting(true)
-
+    e.preventDefault();
+    setMessage("");
+    setIsSubmitting(true);
+  
     try {
-      // Convertir l'image en base64 si elle existe
-      let photoBase64 = null
+      let photoBase64 = null;
       if (formData.photo) {
         photoBase64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader()
-          reader.readAsDataURL(formData.photo!)
-          reader.onload = () => resolve(reader.result as string)
-          reader.onerror = error => reject(error)
-        })
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject(new Error("Erreur de lecture du fichier"));
+          if (formData.photo) {
+            reader.readAsDataURL(formData.photo);
+          }
+        });
       }
-
+  
       const response = await fetch('/api/submit', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           photoBase64
         }),
-      })
-
-      if (response.ok) {
-        setShowSuccessModal(true)
-        setFormData({
-          nom: "",
-          email: "",
-          instagram: "",
-          ville: "",
-          categorie: "",
-          autorisationParticipation: false,
-          photo: null,
-        })
-        setFileName("")
+        signal: AbortSignal.timeout(15000) // Timeout après 15s
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      if (data.success) {
+        setShowSuccessModal(true);
       } else {
-        const error = await response.json()
-        setMessage(`❌ ${error.error || "Erreur lors de l'envoi"}`)
+        throw new Error(data.error || "Erreur inconnue");
       }
     } catch (err) {
-      console.error(err)
-      setMessage("❌ Erreur réseau, veuillez réessayer")
+      console.error("Erreur de soumission:", err);
+      setMessage(`❌ ${err instanceof Error ? err.message : "Erreur réseau"}`);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

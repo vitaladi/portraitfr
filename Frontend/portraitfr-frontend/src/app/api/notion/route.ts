@@ -1,6 +1,15 @@
 // app/api/submit/route.ts
 import { Client } from "@notionhq/client"
 import { NextResponse } from "next/server"
+new NextResponse(JSON.stringify({ success: true }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN })
 
@@ -12,8 +21,19 @@ interface NotionFileUpload {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    const body = await request.json().catch(() => {
+        throw new Error("Invalid JSON format");
+      });
+  
+      // Validation des champs obligatoires
+      const requiredFields = ['nom', 'email', 'instagram', 'ville', 'categorie'];
+      for (const field of requiredFields) {
+        if (!body[field]) {
+          throw new Error(`Le champ ${field} est requis`);
+        }
+      }
     // Validation des données requises
     if (!body.nom || !body.email || !body.instagram || !body.ville || !body.categorie) {
       return NextResponse.json(
@@ -119,8 +139,10 @@ export async function POST(request: Request) {
       })
     })
     console.log("Page créée avec succès:", response)
+    clearTimeout(timeout);
+    // Réponse de succès
     return NextResponse.json(
-      { message: "✅ Participation envoyée avec succès !" },
+      { message: "✅ Participation envoyée avec succès !", success: true },
       { status: 200 }
     )
   } catch (error) {
