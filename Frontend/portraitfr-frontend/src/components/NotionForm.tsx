@@ -1,7 +1,6 @@
 "use client"
-
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 
 export default function NotionForm() {
   const [formData, setFormData] = useState({
@@ -11,244 +10,190 @@ export default function NotionForm() {
     ville: "",
     categorie: "",
     autorisationParticipation: false,
-    photo: null as File | null,
+    photo: null as File | null
   })
 
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [message, setMessage] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [fileError, setFileError] = useState("")
-  const [fileName, setFileName] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
     const checked = (e.target as HTMLInputElement).checked
     setFormData(prev => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : value
     }))
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileError("")
-    setFileName("")
     if (e.target.files?.[0]) {
-      const file = e.target.files[0]
-      if (file.size > 25 * 1024 * 1024) {
-        setFileError("La taille de l'image ne doit pas dépasser 25 Mo")
-        return
-      }
-      setFormData(prev => ({ ...prev, photo: file }))
-      setFileName(file.name)
+      setFormData(prev => ({ ...prev, photo: e.target.files![0] }))
     }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage("");
-    setIsSubmitting(true);
-  
+    e.preventDefault()
+    setStatus("loading")
+    
     try {
-      let photoBase64 = null;
+      // Conversion de la photo en base64 si elle existe
+      let photoBase64 = null
       if (formData.photo) {
-        photoBase64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = () => reject(new Error("Erreur de lecture du fichier"));
+        photoBase64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(reader.result as string)
           if (formData.photo) {
-            reader.readAsDataURL(formData.photo);
+            reader.readAsDataURL(formData.photo)
           }
-        });
+        })
       }
-  
-      const response = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+
+      // Envoi des données à votre API Next.js
+      const response = await fetch("/api/notion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           photoBase64
-        }),
-        signal: AbortSignal.timeout(15000) // Timeout après 15s
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      if (data.success) {
-        setShowSuccessModal(true);
-      } else {
-        throw new Error(data.error || "Erreur inconnue");
-      }
-    } catch (err) {
-      console.error("Erreur de soumission:", err);
-      setMessage(`❌ ${err instanceof Error ? err.message : "Erreur réseau"}`);
-    } finally {
-      setIsSubmitting(false);
+        })
+      })
+
+      if (!response.ok) throw new Error(await response.text())
+
+      setStatus("success")
+      setMessage("✅ Candidature envoyée avec succès !")
+      
+      // Réinitialisation du formulaire
+      setFormData({
+        nom: "",
+        email: "",
+        instagram: "",
+        ville: "",
+        categorie: "",
+        autorisationParticipation: false,
+        photo: null
+      })
+
+    } catch (error) {
+      setStatus("error")
+      setMessage(`❌ Erreur : ${error instanceof Error ? error.message : "Une erreur est survenue"}`)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-4">
+      {/* Champ Nom */}
+      <div>
         <input
           name="nom"
           value={formData.nom}
           onChange={handleChange}
           placeholder="Nom complet"
           required
-          className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange focus:ring-1 focus:ring-orange text-white placeholder-gray-400 transition"
+          className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange text-white"
         />
-
-        <input
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="Email"
-          required
-          className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange focus:ring-1 focus:ring-orange text-white placeholder-gray-400 transition"
-        />
-
-        <input
-          name="instagram"
-          value={formData.instagram}
-          onChange={handleChange}
-          placeholder="Compte Instagram"
-          required
-          className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange focus:ring-1 focus:ring-orange text-white placeholder-gray-400 transition"
-        />
-
-        <input
-          name="ville"
-          value={formData.ville}
-          onChange={handleChange}
-          placeholder="Ville"
-          required
-          className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange focus:ring-1 focus:ring-orange text-white placeholder-gray-400 transition"
-        />
-
-        <select
-          name="categorie"
-          value={formData.categorie}
-          onChange={handleChange}
-          required
-          className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange focus:ring-1 focus:ring-orange text-white placeholder-gray-400 transition"
-        >
-          <option value="">Choisir une catégorie</option>
-          <option value="Photographe">Photographe</option>
-          <option value="Modèle">Modèle</option>
-          <option value="MUA">MUA</option>
-          <option value="Projet de l'année">Projet de l'année</option>
-        </select>
       </div>
 
-      <label className="block w-full bg-gray-900/80 border border-gray-700 text-orange rounded-lg p-4 text-center cursor-pointer hover:bg-gray-800 transition">
-        📸 {fileName || "Soumettre une photo"}
+      {/* Champ Email */}
+      <input
+        name="email"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Email"
+        required
+        className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange text-white"
+      />
+
+      {/* Champ Instagram */}
+      <input
+        name="instagram"
+        value={formData.instagram}
+        onChange={handleChange}
+        placeholder="@instagram"
+        required
+        className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange text-white"
+      />
+
+      {/* Champ Ville */}
+      <input
+        name="ville"
+        value={formData.ville}
+        onChange={handleChange}
+        placeholder="Ville"
+        required
+        className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange text-white"
+      />
+
+      {/* Sélecteur Catégorie */}
+      <select
+        name="categorie"
+        value={formData.categorie}
+        onChange={handleChange}
+        required
+        className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange text-white"
+      >
+        <option value="">Choisir une catégorie</option>
+        <option value="Photographe">Photographe</option>
+        <option value="Modèle">Modèle</option>
+        <option value="MUA">Maquilleur(se)</option>
+      </select>
+
+      {/* Upload Photo */}
+      <label className="block border border-dashed border-orange/50 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-800/30 transition">
+        {formData.photo ? (
+          <span className="text-orange">📸 Photo sélectionnée</span>
+        ) : (
+          <span>📸 Télécharger une photo (max 25MB)</span>
+        )}
         <input
-          name="photo"
           type="file"
-          accept=".jpg,.jpeg,.png"
+          accept="image/*"
           onChange={handleFileChange}
           className="hidden"
         />
       </label>
 
-      {fileError && (
-        <div className="text-red-400 text-sm mt-2 text-center">
-          {fileError}
+      {/* Checkbox Autorisation */}
+      {formData.photo && (
+        <div className="flex items-start space-x-2 p-4 bg-gray-900/50 rounded-lg">
+          <input
+            type="checkbox"
+            name="autorisationParticipation"
+            checked={formData.autorisationParticipation}
+            onChange={handleChange}
+            required
+            className="mt-1 accent-orange"
+          />
+          <span className="text-sm">
+            Je certifie être l'auteur de cette photo et autorise son utilisation.
+          </span>
         </div>
       )}
 
-      <AnimatePresence>
-        {formData.photo && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-gray-900/80 border border-gray-700 p-4 rounded-lg mt-4">
-              <label className="flex items-start space-x-2">
-                <input
-                  type="checkbox"
-                  name="autorisationParticipation"
-                  checked={formData.autorisationParticipation}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 accent-orange"
-                />
-                <span className="text-sm text-gray-300">
-                  Je certifie être l'auteur ou avoir les droits nécessaires pour cette photo et autorise son utilisation dans le cadre des PortraitFr Awards.
-                </span>
-              </label>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+      {/* Bouton de soumission */}
       <button
         type="submit"
-        disabled={isSubmitting}
-        className={`bg-orange text-white py-3 px-6 rounded-full hover:bg-orange-600 transition w-full mt-4 flex items-center justify-center ${
-          isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-        }`}
+        disabled={status === "loading"}
+        className={`w-full py-3 px-6 rounded-full ${
+          status === "loading" ? "bg-orange/50" : "bg-orange hover:bg-orange/80"
+        } text-white transition`}
       >
-        {isSubmitting ? (
-          <>
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Envoi en cours...
-          </>
-        ) : (
-          "Envoyer ma candidature"
-        )}
+        {status === "loading" ? "Envoi en cours..." : "Soumettre ma candidature"}
       </button>
 
-      <AnimatePresence>
-        {message && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className={`text-center mt-4 p-3 rounded-lg ${
-              message.includes("❌") ? "bg-red-900/50 border border-red-700" : "bg-green-900/50 border border-green-700"
-            }`}
-          >
-            <p>{message}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showSuccessModal && (
-          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              className="bg-black/90 border border-orange/30 rounded-xl p-8 max-w-md w-full"
-            >
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-orange mb-4">Candidature envoyée !</h3>
-                <p className="text-gray-300 mb-6">
-                  Merci pour votre participation aux PortraitFr Awards 2025.
-                </p>
-                <button
-                  onClick={() => setShowSuccessModal(false)}
-                  className="border border-orange text-orange py-2 px-6 rounded-full font-medium hover:bg-orange/10 transition"
-                >
-                  Fermer
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* Messages de statut */}
+      {message && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className={`p-3 rounded-lg text-center ${
+            status === "error" ? "bg-red-900/50" : "bg-green-900/50"
+          }`}
+        >
+          {message}
+        </motion.div>
+      )}
     </form>
   )
 }

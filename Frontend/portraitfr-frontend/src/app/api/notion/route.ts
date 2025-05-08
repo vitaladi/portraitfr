@@ -1,90 +1,85 @@
-// app/api/submit/route.ts
+// app/api/notion/route.ts
 import { Client } from "@notionhq/client"
 import { NextResponse } from "next/server"
-new NextResponse(JSON.stringify({ success: true }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN })
 
-// Interface pour le typage des fichiers
-interface NotionFileUpload {
-  name: string;
-  url: string;
-}
 
 export async function POST(request: Request) {
+    
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-    const body = await request.json().catch(() => {
-        throw new Error("Invalid JSON format");
-      });
-  
-      // Validation des champs obligatoires
-      const requiredFields = ['nom', 'email', 'instagram', 'ville', 'categorie'];
-      for (const field of requiredFields) {
-        if (!body[field]) {
-          throw new Error(`Le champ ${field} est requis`);
-        }
+    interface PageProperties {
+        Nom: {
+          title: Array<{
+            text: { content: string }
+          }>
+        };
+        Email: {
+          email: string
+        };
+        Instagram: {
+          rich_text: Array<{
+            text: { content: string }
+          }>
+        };
+        Ville: {
+          rich_text: Array<{
+            text: { content: string }
+          }>
+        };
+        Catégorie: {
+          select: { name: string }
+        };
+        Autorisation: {
+          checkbox: boolean
+        };
+        Date: {
+          date: { start: string }
+        };
+        Photo?: {
+          files: Array<{
+            name: string;
+            external: { url: string };
+          }>
+        };
       }
-    // Validation des données requises
-    if (!body.nom || !body.email || !body.instagram || !body.ville || !body.categorie) {
-      return NextResponse.json(
-        { error: "Tous les champs obligatoires doivent être remplis" },
-        { status: 400 }
-      )
-    }
+    // Configuration du timeout
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 15000) // 15s timeout
 
-    if (!body.autorisationParticipation) {
-      return NextResponse.json(
-        { error: "Vous devez accepter les conditions de participation" },
-        { status: 400 }
-      )
+    // Récupération et validation des données
+    const body = await request.json()
+    
+    // Validation des champs obligatoires
+    const requiredFields = ['nom', 'email', 'instagram', 'ville', 'categorie', 'autorisationParticipation']
+    for (const field of requiredFields) {
+      if (!body[field]) {
+        throw new Error(`Le champ ${field} est requis`)
+      }
     }
 
     // Traitement de l'image
     let fileUrl: string | null = null
     if (body.photoBase64) {
-      try {
-        const matches = body.photoBase64.match(/^data:(.+);base64,(.+)$/)
-        if (!matches || matches.length !== 3) {
-          return NextResponse.json(
-            { error: "Format d'image invalide" },
-            { status: 400 }
-          )
-        }
-
-        const mimeType = matches[1]
-        const base64Data = matches[2]
-        const fileBuffer = Buffer.from(base64Data, 'base64')
-
-        // Vérification de la taille (25MB max pour les comptes payants)
-        if (fileBuffer.length > 25 * 1024 * 1024) {
-          return NextResponse.json(
-            { error: "La taille de l'image ne doit pas dépasser 25MB" },
-            { status: 400 }
-          )
-        }
-
-        // Solution alternative pour l'upload via API Pages
-        // On va stocker l'image directement dans la propriété files
-        const fileExtension = mimeType.split('/')[1] || 'jpg'
-        fileUrl = `data:${mimeType};base64,${base64Data}`
-
-      } catch (error) {
-        console.error("Erreur lors du traitement de l'image:", error)
+      const matches = body.photoBase64.match(/^data:(.+);base64,(.+)$/)
+      if (!matches || matches.length !== 3) {
         return NextResponse.json(
-          { error: "Erreur lors du traitement de l'image" },
-          { status: 500 }
+          { error: "Format d'image invalide" },
+          { status: 400 }
         )
       }
+
+      const base64Data = matches[2]
+      const fileBuffer = Buffer.from(base64Data, 'base64')
+
+      // Vérification taille fichier (25MB max)
+      if (fileBuffer.length > 25 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: "La taille de l'image ne doit pas dépasser 25MB" },
+          { status: 400 }
+        )
+      }
+      fileUrl = body.photoBase64
     }
 
     // Construction des propriétés Notion
@@ -110,50 +105,71 @@ export async function POST(request: Request) {
       Date: {
         date: { start: new Date().toISOString() }
       },
-      // Removed Photo from properties as it is incompatible
+      ...(fileUrl && {
+        Photo: {
+          files: [{
+            name: "submission.jpg",
+            external: { url: fileUrl }
+          }]
+        }
+      })
     }
 
     // Création de la page dans Notion
     const response = await notion.pages.create({
-      parent: { database_id: process.env.NOTION_DATABASE_ID! },
+      parent: { 
+        database_id: process.env.NOTION_DATABASE_ID! 
+      },
       properties: pageProperties,
       ...(fileUrl && {
-        children: [
-          {
-            object: "block",
-            type: "image",
-            image: {
-              type: "external",
-              external: { url: fileUrl }
-            }
-          },
-          {
-            object: "block",
-            type: "file",
-            file: {
-              type: "external",
-              external: { url: fileUrl }
-            }
+        children: [{
+          object: "block",
+          type: "image",
+          image: {
+            type: "external",
+            external: { url: fileUrl }
           }
-        ]
+        }]
       })
     })
-    console.log("Page créée avec succès:", response)
-    clearTimeout(timeout);
-    // Réponse de succès
+
+    clearTimeout(timeout)
+
     return NextResponse.json(
-      { message: "✅ Participation envoyée avec succès !", success: true },
-      { status: 200 }
+      { 
+        success: true,
+        message: "✅ Participation envoyée avec succès !",
+        pageId: response.id
+      },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }
+      }
     )
+
   } catch (error) {
-    // Gestion des erreurs
-    if (error instanceof Error) {
     console.error("Erreur serveur:", error)
+    
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : "Une erreur est survenue lors de la soumission"
+
     return NextResponse.json(
-      { error: "Une erreur est survenue lors de la soumission" },
-      { status: 500 }
+      { error: errorMessage },
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        }
+      }
     )
   }
 }
-}
+
 export const dynamic = "force-dynamic"
