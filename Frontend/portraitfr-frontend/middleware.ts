@@ -20,5 +20,5 @@ export function middleware(request: Request): NextResponse {
 }
 
 export const config = {
-  matcher: '/api/:route*',
+  matcher: '/api/notion/:route*',
 }

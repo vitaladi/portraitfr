@@ -1,174 +1,71 @@
 // app/api/notion/route.ts
-import { Client } from "@notionhq/client"
 import { NextResponse } from "next/server"
+import { Client } from "@notionhq/client"
+import { randomUUID } from "crypto"
+import path from "path"
+import fs from "fs/promises"
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN })
 
-
-export async function POST(request: Request) {
-    
+export async function POST(req: Request) {
   try {
-    interface PageProperties {
-        Nom: {
-          title: Array<{
-            text: { content: string }
-          }>
-        };
-        Email: {
-          email: string
-        };
-        Instagram: {
-          rich_text: Array<{
-            text: { content: string }
-          }>
-        };
-        Ville: {
-          rich_text: Array<{
-            text: { content: string }
-          }>
-        };
-        Catégorie: {
-          select: { name: string }
-        };
-        Autorisation: {
-          checkbox: boolean
-        };
-        Date: {
-          date: { start: string }
-        };
-        Photo?: {
-          files: Array<{
-            name: string;
-            external: { url: string };
-          }>
-        };
-      }
-    // Configuration du timeout
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 15000) // 15s timeout
+    const formData = await req.formData()
 
-    // Récupération et validation des données
-    const body = await request.json()
-    
-    // Validation des champs obligatoires
-    const requiredFields = ['nom', 'email', 'instagram', 'ville', 'categorie', 'autorisationParticipation']
-    for (const field of requiredFields) {
-      if (!body[field]) {
-        throw new Error(`Le champ ${field} est requis`)
-      }
+    const nom = formData.get("nom") as string
+    const email = formData.get("email") as string
+    const instagram = formData.get("instagram") as string
+    const ville = formData.get("ville") as string
+    const categorie = formData.get("categorie") as string
+    const autorisation = formData.get("autorisationParticipation") === "true"
+    const file = formData.get("photo") as File | null
+
+    if (!nom || !email || !instagram || !ville || !categorie || !file || !autorisation) {
+      return NextResponse.json({ error: "Tous les champs sont requis." }, { status: 400 })
     }
 
-    // Traitement de l'image
-    let fileUrl: string | null = null
-    if (body.photoBase64) {
-      const matches = body.photoBase64.match(/^data:(.+);base64,(.+)$/)
-      if (!matches || matches.length !== 3) {
-        return NextResponse.json(
-          { error: "Format d'image invalide" },
-          { status: 400 }
-        )
-      }
-
-      const base64Data = matches[2]
-      const fileBuffer = Buffer.from(base64Data, 'base64')
-
-      // Vérification taille fichier (25MB max)
-      if (fileBuffer.length > 25 * 1024 * 1024) {
-        return NextResponse.json(
-          { error: "La taille de l'image ne doit pas dépasser 25MB" },
-          { status: 400 }
-        )
-      }
-      fileUrl = body.photoBase64
+    // Vérification taille fichier
+    if (file.size > 25 * 1024 * 1024) {
+      return NextResponse.json({ error: "L'image ne doit pas dépasser 25 Mo." }, { status: 400 })
     }
 
-    // Construction des propriétés Notion
-    const pageProperties = {
-      Nom: {
-        title: [{ text: { content: body.nom } }]
-      },
-      Email: {
-        email: body.email
-      },
-      Instagram: {
-        rich_text: [{ text: { content: body.instagram } }]
-      },
-      Ville: {
-        rich_text: [{ text: { content: body.ville } }]
-      },
-      Catégorie: {
-        select: { name: body.categorie }
-      },
-      Autorisation: {
-        checkbox: body.autorisationParticipation
-      },
-      Date: {
-        date: { start: new Date().toISOString() }
-      },
-      ...(fileUrl && {
-        Photo: {
-          files: [{
-            name: "submission.jpg",
-            external: { url: fileUrl }
-          }]
-        }
-      })
-    }
+    // Nom unique pour le fichier
+    const ext = file.name.split(".").pop() || "jpg"
+    const filename = `${Date.now()}-${randomUUID()}.${ext}`
+    const uploadPath = path.join(process.cwd(), "public/uploads", filename)
+
+    // Sauvegarde locale du fichier
+    const arrayBuffer = await file.arrayBuffer()
+    await fs.writeFile(uploadPath, Buffer.from(arrayBuffer))
+
+    // URL publique vers l’image (à adapter selon ton domaine)
+    const fileUrl = `https://awards.portraitfr.fr/uploads/${filename}`
 
     // Création de la page dans Notion
-    const response = await notion.pages.create({
-      parent: { 
-        database_id: process.env.NOTION_DATABASE_ID! 
+    const notionResponse = await notion.pages.create({
+      parent: { database_id: process.env.NOTION_DATABASE_ID! },
+      properties: {
+        Nom: { title: [{ text: { content: nom } }] },
+        Email: { email },
+        Instagram: { rich_text: [{ text: { content: instagram } }] },
+        Ville: { rich_text: [{ text: { content: ville } }] },
+        Catégorie: { select: { name: categorie } },
+        Autorisation: { checkbox: autorisation },
+        Date: { date: { start: new Date().toISOString() } },
+        Photo: {
+          files: [
+            {
+              name: filename,
+              external: { url: fileUrl },
+            },
+          ],
+        },
       },
-      properties: pageProperties,
-      ...(fileUrl && {
-        children: [{
-          object: "block",
-          type: "image",
-          image: {
-            type: "external",
-            external: { url: fileUrl }
-          }
-        }]
-      })
     })
 
-    clearTimeout(timeout)
-
-    return NextResponse.json(
-      { 
-        success: true,
-        message: "✅ Participation envoyée avec succès !",
-        pageId: response.id
-      },
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        }
-      }
-    )
-
-  } catch (error) {
-    console.error("Erreur serveur:", error)
-    
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : "Une erreur est survenue lors de la soumission"
-
-    return NextResponse.json(
-      { error: errorMessage },
-      { 
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        }
-      }
-    )
+    return NextResponse.json({ success: true, message: "Participation enregistrée", id: notionResponse.id }, { status: 200 })
+  } catch (err) {
+    console.error("Erreur serveur :", err)
+    return NextResponse.json({ error: "Erreur serveur." }, { status: 500 })
   }
 }
 

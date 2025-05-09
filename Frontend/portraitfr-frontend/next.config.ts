@@ -2,20 +2,25 @@
 const nextConfig = {
   output: 'standalone',
   images: {
-    domains: ['localhost', 'awards.portraitfr.fr'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'awards.portraitfr.fr',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '/**',
+      }
+    ],
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    serverActions: true,
-    middleware: true,
+    serverActions: {},
   },
-  api: {
-    bodyParser: false, // obligatoire pour utiliser FormData
-    sizeLimit: '30mb', // facultatif avec FormData mais utile si tu veux le préciser
-  },
-
 }
 
 module.exports = nextConfig

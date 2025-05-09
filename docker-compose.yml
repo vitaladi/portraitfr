@@ -9,10 +9,9 @@ services:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
     ports:
-      - "3000:3000"  # Port standard Next.js
+      - "3000:3000"
     volumes:
-      - ./Frontend/portraitfr-frontend:/app
-      - /app/node_modules
+      - ./Frontend/portraitfr-frontend/public/uploads:/app/public/uploads  # ✅ accès au dossier uploads
     networks:
       - portraitfr-net
     healthcheck:
