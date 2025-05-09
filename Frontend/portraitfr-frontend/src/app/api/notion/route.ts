@@ -28,7 +28,15 @@ export async function POST(req: Request) {
     }
 
     const ext = file.name.split(".").pop() || "jpg"
-    const filename = `${Date.now()}-${randomUUID()}.${ext}`
+
+// Base du nom de fichier sans extension
+const originalName = file.name.split(".").slice(0, -1).join(".") || "upload"
+const safeInstagram = instagram.replace(/[^a-zA-Z0-9_-]/g, "")
+const safeCategorie = categorie.replace(/[^a-zA-Z0-9_-]/g, "")
+const today = new Date().toISOString().split("T")[0] // yyyy-mm-dd
+
+const filename = `${originalName}@${safeInstagram}+${safeCategorie}+${today}-${randomUUID()}.${ext}`
+
     const uploadPath = path.join(process.cwd(), "public/uploads", filename)
 
     const arrayBuffer = await file.arrayBuffer()
