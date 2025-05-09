@@ -43,8 +43,15 @@ export default function ParticipantPage() {
             <p className="text-gray-400 text-center mb-6">
               Remplissez ce formulaire pour participer aux PortraitFr Awards 2025
             </p>
+            <p className="text-gray-400 text-center mb-6">
+              Les inscriptions sont ouvertes jusqu'au 31 Aout 2025
+            </p>
             <NotionForm />
-            <ParticipantCount />  // ✅ Ajout ici
+            <p className="text-red-400 text-center mb-6">
+              Une seule participation par artiste ne sera acceptée
+            </p>
+
+            <ParticipantCount /> 
           </motion.div>
         </div>
       </div>
