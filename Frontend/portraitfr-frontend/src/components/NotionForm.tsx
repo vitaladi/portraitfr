@@ -2,6 +2,8 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Instagram } from "lucide-react"
+import { useParticipantCount } from "@/context/ParticipantCountContext"
+
 
 export default function NotionForm() {
   const [formData, setFormData] = useState({
@@ -17,6 +19,8 @@ export default function NotionForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [message, setMessage] = useState("")
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const { increment } = useParticipantCount()
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -61,7 +65,8 @@ export default function NotionForm() {
       }
 
       setStatus("success")
-      setMessage("✅ Candidature envoyée avec succès !")
+setMessage("✅ Candidature envoyée avec succès !")
+increment() // ✅ Mise à jour automatique du compteur
       setShowSuccessModal(true)
 
       // Réinitialisation

@@ -1,8 +1,11 @@
 "use client"
 
 import NotionForm from "@/components/NotionForm"
+import ParticipantCount from "@/components/ParticipantCount"
 import { motion } from "framer-motion"
 import Head from "next/head"
+import { ParticipantCountProvider } from "@/context/ParticipantCountContext"
+
 
 export default function ParticipantPage() {
   return (
@@ -11,6 +14,7 @@ export default function ParticipantPage() {
         <title>Participer aux PortraitFr Awards 2025</title>
         <meta name="description" content="Formulaire de participation aux PortraitFr Awards 2025" />
       </Head>
+      <ParticipantCountProvider>
 
       <div className="relative min-h-screen overflow-hidden">
         {/* Image de fond floue */}
@@ -40,9 +44,12 @@ export default function ParticipantPage() {
               Remplissez ce formulaire pour participer aux PortraitFr Awards 2025
             </p>
             <NotionForm />
+            <ParticipantCount />  // ✅ Ajout ici
           </motion.div>
         </div>
       </div>
+      </ParticipantCountProvider>
+
     </>
   )
 }
