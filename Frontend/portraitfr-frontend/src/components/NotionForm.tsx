@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { Instagram } from "lucide-react"
 
 export default function NotionForm() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function NotionForm() {
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [message, setMessage] = useState("")
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -60,6 +62,7 @@ export default function NotionForm() {
 
       setStatus("success")
       setMessage("✅ Candidature envoyée avec succès !")
+      setShowSuccessModal(true)
 
       // Réinitialisation
       setFormData({
@@ -78,6 +81,7 @@ export default function NotionForm() {
   }
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
       <input name="nom" value={formData.nom} onChange={handleChange} placeholder="Nom complet" required className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange text-white" />
       <input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Email" required className="w-full p-3 rounded bg-gray-900/80 border border-gray-700 focus:border-orange text-white" />
@@ -88,8 +92,8 @@ export default function NotionForm() {
         <option value="">Choisir une catégorie</option>
         <option value="Photographe">Photographe</option>
         <option value="Modèle">Modèle</option>
-        <option value="MUA">Maquilleur(se)</option>
-        <option value="Styliste">Projet photo de l'année</option>
+        <option value="MUA">MUA</option>
+        <option value="Projet photo de l'année">Projet photo de l'année</option>
       </select>
 
       <label className="block border border-dashed border-orange/50 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-800/30 transition">
@@ -104,7 +108,7 @@ export default function NotionForm() {
       {formData.photo && (
         <div className="flex items-start space-x-2 p-4 bg-gray-900/50 rounded-lg">
           <input type="checkbox" name="autorisationParticipation" checked={formData.autorisationParticipation} onChange={handleChange} required className="mt-1 accent-orange" />
-          <span className="text-sm">Je certifie être l'auteur de cette photo et autorise son utilisation.</span>
+          <span className="text-sm">Je certifie être l'auteur, le/la modèle ou une personne ayant contribué à la réalisation de la photo soumise. J'atteste également avoir obtenu les autorisations nécessaires ou informé les autres acteurs de la photo pour sa participation au concours et sa diffusion dans le cadre des PortraitFr Awards 2025.</span>
         </div>
       )}
 
@@ -118,5 +122,48 @@ export default function NotionForm() {
         </motion.div>
       )}
     </form>
+     <AnimatePresence>
+     {showSuccessModal && (
+       <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+         <motion.div
+           initial={{ opacity: 0, scale: 0.9 }}
+           animate={{ opacity: 1, scale: 1 }}
+           exit={{ opacity: 0, scale: 0.9 }}
+           transition={{ type: "spring", damping: 20 }}
+           className="bg-black/90 border border-orange/30 rounded-xl p-8 max-w-md w-full"
+         >
+           <div className="text-center space-y-6">
+             <h3 className="text-2xl font-bold text-orange mb-4">
+               Félicitations !
+             </h3>
+             
+             <p className="text-gray-300 mb-6">
+               Votre candidature a bien été enregistrée pour les PortraitFr Awards 2025.
+             </p>
+             
+             <div className="flex flex-col space-y-4">
+               <a
+                 href="https://www.instagram.com/portrait.fr/"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="bg-gradient-to-r from-orange-500 to-pink-600 text-white py-3 px-6 rounded-full font-medium hover:opacity-90 transition flex items-center justify-center gap-2"
+               >
+                 <Instagram className="w-5 h-5" />
+                 Nous suivre sur Instagram
+               </a>
+               
+               <button
+                 onClick={() => setShowSuccessModal(false)}
+                 className="border border-orange text-orange py-3 px-6 rounded-full font-medium hover:bg-orange/10 transition"
+               >
+                 Fermer
+               </button>
+             </div>
+           </div>
+         </motion.div>
+       </div>
+     )}
+   </AnimatePresence>
+    </>
   )
 }
