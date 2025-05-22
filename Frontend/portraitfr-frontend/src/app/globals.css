@@ -1,109 +1,172 @@
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Gloock&display=swap');
+
+/* Base styles */
 @layer base {
+  :root {
+    --color-bg: #0a0a0a;
+    --color-text: #ffffff;
+    --color-primary: #ff6b00; /* Couleur orange */
+    --color-secondary: #8ca9af;
+  }
+
   body {
-    @apply bg-[#0a0a0a] text-white; /* Solution temporaire avec la valeur hexadécimale */
+    @apply bg-[var(--color-bg)] text-[var(--color-text)];
     font-family: var(--font-geist-sans), sans-serif;
   }
 }
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+
+/* Animations */
+@layer utilities {
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  @keyframes loader {
+    to {
+      opacity: 1;
+      transform: scale3d(0.5, 0.5, 1);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s forwards;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 0.4s;
   }
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s forwards;
-}
+/* Component styles */
+@layer components {
+  /* Scene container */
+  .scene {
+    perspective: 1000px;
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    z-index: 0;
+  }
 
-.animation-delay-200 {
-  animation-delay: 0.2s;
-}
+  /* Card group */
+  .group {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+  }
 
-.animation-delay-400 {
-  animation-delay: 0.4s;
-}
+  /* Individual cards */
+  .card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    will-change: transform, opacity;
+  }
 
-/* Ajouts à globals.css */
-@import url('https://fonts.googleapis.com/css2?family=Gloock&display=swap');
-
-.demo-1 {
-  --color-bg: #e3efed;
-  --color-bg-alt: #8ca9af;
-  --color-title: #000;
-}
-
-.scene {
-  perspective: 1000px;
-  overflow: hidden;
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  left: 0;
-  top: 0;
-  z-index: 0;
-}
-
-.group {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.card {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  will-change: transform, opacity;
-}
-
-.card__img {
-  width: 8vw;
-  min-width: 100px;
-  border-radius: 5px;
-  aspect-ratio: 2/3;
-  background-position: center;
-  background-size: cover;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.content {
-  position: relative;
-  z-index: 10;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.headings {
-  text-align: center;
-  padding: 2rem;
-}
-
-.headings__main {
-  font-family: "Gloock", serif;
-  font-size: clamp(2.5rem, 1.59rem + 3.883vw, 6.25rem);
-  line-height: 1.1;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
   .card__img {
-    width: 15vw;
+    @apply min-w-[100px] rounded-sm;
+    width: 8vw;
+    aspect-ratio: 2/3;
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   }
-  
+
+  /* Content section */
+  .content {
+    @apply relative z-10 h-screen flex justify-center items-center;
+  }
+
+  /* Headings */
+  .headings {
+    @apply text-center py-8;
+  }
+
   .headings__main {
-    font-size: 3rem;
+    @apply mb-4 uppercase;
+    font-family: "Gloock", serif;
+    font-size: clamp(2.5rem, 1.59rem + 3.883vw, 6.25rem);
+    line-height: 1.1;
+  }
+
+  /* Background effects */
+  .bg-orange-gradient {
+    @apply fixed inset-0;
+    background: linear-gradient(
+      to bottom right,
+      var(--color-primary-900),
+      var(--color-primary-700),
+      var(--color-primary-600)
+    );
+  }
+
+  .bg-vignette {
+    @apply absolute inset-0;
+    box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.7);
+  }
+
+  .bg-grain {
+    @apply absolute inset-0 opacity-20 pointer-events-none;
+    background-image: url('/siteimages/grain.png');
+    mix-blend-mode: overlay;
+  }
+
+  /* Loading state */
+  .loading::before,
+  .loading::after {
+    @apply content-[''] fixed z-[1000];
+  }
+
+  .loading::before {
+    @apply inset-0 bg-[var(--color-bg)];
+  }
+
+  .loading::after {
+    @apply w-[60px] h-[60px] rounded-full opacity-40 bg-[var(--color-primary)];
+    top: 50%;
+    left: 50%;
+    margin: -30px 0 0 -30px;
+    animation: loader 0.7s linear infinite alternate forwards;
+  }
+
+  /* Debug mode */
+  [data-debug].debug {
+    @apply absolute top-1/2 left-1/2 w-screen h-px bg-red-500;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Responsive adjustments */
+@layer utilities {
+  @media (max-width: 768px) {
+    .card__img {
+      width: 15vw;
+    }
+    
+    .headings__main {
+      font-size: 3rem;
+    }
   }
 }
