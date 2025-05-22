@@ -9,10 +9,10 @@
 /* Base styles */
 @layer base {
   :root {
-    --color-bg: #0a0a0a;
-    --color-text: #ffffff;
-    --color-primary: #ff6b00; /* Couleur orange */
-    --color-secondary: #8ca9af;
+    --color-primary: #F9D423;  /* Jaune orangé */
+    --color-secondary: #FF4E50; /* Rouge orangé */
+    --color-bg: linear-gradient(to bottom right, var(--color-primary), var(--color-secondary));
+    --color-text: #2c3e50;     /* Texte foncé pour contraste */
   }
 
   body {

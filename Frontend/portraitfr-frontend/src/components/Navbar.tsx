@@ -20,10 +20,6 @@ const infosDropdownItems = [
   { label: "Partenaires", href: "/infos/partenaires" },
 ]
 
-const adminNavItems = [
-  { label: "Participants", href: "/participants" }
-]
-
 export default function Navbar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
@@ -32,48 +28,43 @@ export default function Navbar() {
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
 
-  const showAdminItems = process.env.NODE_ENV === 'development'
-
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-orange/20 shadow-lg">
+<nav className="fixed top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-md border-b border-white/10 shadow-lg">
       {/* Texture de grain */}
       <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('/siteimages/grain.png')] mix-blend-overlay" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="flex items-center justify-between h-16">
-          <Link 
-            href="/" 
-            className="flex items-center space-x-2 group relative z-10"
-            onClick={closeMenu}
-          >
-            <div className="relative w-10 h-10">
-              <Image 
-                src="/fontanime/logo.PNG" 
-                alt="Logo PortraitFr" 
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between h-20"> {/* Hauteur augmentée */}
+          {/* Logo fixe avec espacement */}
+          <div className="flex-shrink-0 flex items-center">
+            <Link href="/" className="relative h-12 w-12 block">
+              <Image
+                src="/fontanime/logo.PNG"
+                alt="Logo PortraitFr"
                 fill
-                className="object-contain transition-transform duration-300 group-hover:scale-110"
+                className="object-contain"
                 priority
               />
-            </div>
-          </Link>
+            </Link>
+          </div>
 
-          {/* Version desktop */}
-          <div className="hidden md:flex items-center space-x-1">
+          {/* Version desktop - Espacement augmenté */}
+          <div className="hidden md:flex items-center space-x-6"> {/* Espacement passé à space-x-6 */}
             {publicNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 hover:text-orange ${
+                className={`relative px-3 py-4 text-sm font-medium transition-all duration-300 ${
                   pathname === item.href 
                     ? "text-orange" 
-                    : "text-white/90 hover:text-orange"
+                    : "text-white hover:text-orange"
                 }`}
               >
                 {item.label}
                 {pathname === item.href && (
                   <motion.span 
                     layoutId="navIndicator"
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 w-6 bg-orange rounded-full"
+                    className="absolute bottom-3 left-1/2 transform -translate-x-1/2 h-0.5 w-6 bg-orange rounded-full"
                   />
                 )}
               </Link>
@@ -85,10 +76,10 @@ export default function Navbar() {
                 onMouseEnter={() => setInfosOpen(true)}
                 onMouseLeave={() => setInfosOpen(false)}
                 onClick={() => setInfosOpen(!infosOpen)}
-                className={`flex items-center px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                className={`flex items-center px-3 py-4 text-sm font-medium transition-all duration-300 ${
                   infosOpen || infosDropdownItems.some(item => pathname === item.href) 
                     ? "text-orange" 
-                    : "text-white/90 hover:text-orange"
+                    : "text-white hover:text-orange"
                 }`}
               >
                 Infos
@@ -109,7 +100,7 @@ export default function Navbar() {
                     transition={{ duration: 0.2 }}
                     onMouseEnter={() => setInfosOpen(true)}
                     onMouseLeave={() => setInfosOpen(false)}
-                    className="absolute left-0 mt-2 w-48 bg-black/95 backdrop-blur-sm border border-orange/20 rounded-lg shadow-xl overflow-hidden z-50"
+                    className="absolute left-0 mt-1 w-48 bg-black/95 backdrop-blur-sm border border-orange/20 rounded-lg shadow-xl overflow-hidden z-50"
                   >
                     {infosDropdownItems.map((item) => (
                       <Link
@@ -118,7 +109,7 @@ export default function Navbar() {
                         className={`block px-4 py-3 text-sm transition ${
                           pathname === item.href 
                             ? "bg-orange/10 text-orange" 
-                            : "text-white/90 hover:bg-gray-800/50 hover:text-orange"
+                            : "text-white hover:bg-gray-800/50"
                         }`}
                       >
                         {item.label}
@@ -128,26 +119,12 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
-
-            {showAdminItems && adminNavItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-4 py-2 text-sm font-medium transition ${
-                  pathname === item.href 
-                    ? "text-orange" 
-                    : "text-white/70 hover:text-orange"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
           </div>
 
           {/* Bouton menu mobile */}
           <button 
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-md text-white/90 hover:text-orange focus:outline-none transition relative z-10"
+            className="md:hidden p-2 rounded-md text-white hover:text-orange focus:outline-none transition"
             aria-label="Menu"
           >
             {isOpen ? (
@@ -167,21 +144,18 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-black/95 backdrop-blur-lg overflow-hidden relative"
+            className="md:hidden bg-black/95 backdrop-blur-lg overflow-hidden"
           >
-            {/* Texture de grain pour le menu mobile */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('/siteimages/grain.png')] mix-blend-overlay" />
-            
-            <div className="px-4 pt-2 pb-6 space-y-1 relative z-10">
+            <div className="px-6 pt-4 pb-8 space-y-2"> {/* Espacement augmenté */}
               {publicNavItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={closeMenu}
-                  className={`block px-4 py-3 rounded-lg text-base font-medium transition ${
+                  className={`block px-4 py-4 rounded-lg text-base font-medium transition ${
                     pathname === item.href 
                       ? "bg-orange/10 text-orange border-l-4 border-orange" 
-                      : "text-white/90 hover:bg-gray-800/50 hover:text-orange"
+                      : "text-white hover:bg-gray-800/50"
                   }`}
                 >
                   {item.label}
@@ -189,13 +163,13 @@ export default function Navbar() {
               ))}
 
               {/* Menu déroulant Infos - Mobile */}
-              <div className="pt-1">
+              <div className="pt-2">
                 <button
                   onClick={() => setInfosOpen(!infosOpen)}
-                  className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-base font-medium transition ${
+                  className={`flex items-center justify-between w-full px-4 py-4 rounded-lg text-base font-medium transition ${
                     infosOpen || infosDropdownItems.some(item => pathname === item.href) 
                       ? "bg-orange/10 text-orange" 
-                      : "text-white/90 hover:bg-gray-800/50 hover:text-orange"
+                      : "text-white hover:bg-gray-800/50"
                   }`}
                 >
                   Infos
@@ -214,7 +188,7 @@ export default function Navbar() {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="pl-4 mt-1 space-y-1 overflow-hidden"
+                      className="pl-6 mt-2 space-y-2 overflow-hidden"
                     >
                       {infosDropdownItems.map((item) => (
                         <Link
@@ -224,7 +198,7 @@ export default function Navbar() {
                           className={`block px-4 py-3 rounded-lg text-base font-medium transition ${
                             pathname === item.href 
                               ? "bg-orange/10 text-orange" 
-                              : "text-white/90 hover:bg-gray-800/50 hover:text-orange"
+                              : "text-white hover:bg-gray-800/50"
                           }`}
                         >
                           {item.label}
@@ -234,21 +208,6 @@ export default function Navbar() {
                   )}
                 </AnimatePresence>
               </div>
-
-              {showAdminItems && adminNavItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeMenu}
-                  className={`block px-4 py-3 rounded-lg text-base font-medium transition ${
-                    pathname === item.href 
-                      ? "bg-orange/10 text-orange" 
-                      : "text-white/70 hover:bg-gray-800/50 hover:text-orange"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
             </div>
           </motion.div>
         )}

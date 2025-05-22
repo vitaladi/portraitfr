@@ -135,17 +135,18 @@ export default function HomePage() {
       </div>
 
       {/* Arrière-plan orange avec vignettage et grain */}
-      <div className="fixed inset-0 bg-gradient-to-br from-orange-900 via-orange-700 to-orange-600">
-        <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.7)]" />
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute inset-0 bg-[url('/siteimages/grain.png')] mix-blend-overlay" />
-        </div>
-      </div>
+      <div className="fixed inset-0 bg-gradient-to-br from-[#F9D423] to-[#FF4E50]">
+  {/* Vignettage légèrement réduit pour ne pas assombrir trop le dégradé */}
+  <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.3)]" />
+  
+  {/* Texture de grain plus subtile */}
+  <div className="absolute inset-0 opacity-15 pointer-events-none bg-[url('/siteimages/grain.png')] mix-blend-multiply" />
+</div>
 
       {/* Conteneur des images animées */}
       <div ref={containerRef} className="scene absolute inset-0 overflow-hidden opacity-80">
         <div className="group">
-          {[...Array(24)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <div key={i} className="card absolute">
               <div 
                 className="card__img w-20 aspect-[2/3] rounded-sm bg-cover bg-center absolute"
