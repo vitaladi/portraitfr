@@ -9,15 +9,17 @@ import { AnimatePresence, motion } from "framer-motion"
 const publicNavItems = [
   { label: "Accueil", href: "/" },
   { label: "Inscription", href: "/participer" },
+  { label: "Awards", href: "/infos/awards" }, 
   { label: "Podcast Focus", href: "/focus" },
   { label: "Billetterie", href: "/billet" },
-  { label: "Contact", href: "/contact" },
+  
 ]
 
 const infosDropdownItems = [
-  { label: "FAQ", href: "/infos/faq" },
-  { label: "Awards", href: "/infos/awards" },
-  { label: "Partenaires", href: "/infos/partenaires" },
+  { label: "Partenaires & Jury", href: "/infos/partenaires" },
+  { label: "Contact", href: "/contact" },
+  { label: "CGU", href: "/infos/cgu" },
+
 ]
 
 export default function Navbar() {
@@ -57,7 +59,7 @@ export default function Navbar() {
                 className={`relative px-3 py-4 text-sm font-medium transition-all duration-300 ${
                   pathname === item.href 
                     ? "text-orange" 
-                    : "text-white hover:text-orange"
+                    : "text-[#EAE2B7]  hover:text-orange"
                 }`}
               >
                 {item.label}
@@ -79,7 +81,7 @@ export default function Navbar() {
                 className={`flex items-center px-3 py-4 text-sm font-medium transition-all duration-300 ${
                   infosOpen || infosDropdownItems.some(item => pathname === item.href) 
                     ? "text-orange" 
-                    : "text-white hover:text-orange"
+                    : "text-[#EAE2B7]  hover:text-orange"
                 }`}
               >
                 Infos
@@ -109,7 +111,7 @@ export default function Navbar() {
                         className={`block px-4 py-3 text-sm transition ${
                           pathname === item.href 
                             ? "bg-orange/10 text-orange" 
-                            : "text-white hover:bg-gray-800/50"
+                            : "text-[#EAE2B7]  hover:bg-gray-800/50"
                         }`}
                       >
                         {item.label}
@@ -124,7 +126,7 @@ export default function Navbar() {
           {/* Bouton menu mobile */}
           <button 
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-md text-white hover:text-orange focus:outline-none transition"
+            className="md:hidden p-2 rounded-md text-[#EAE2B7]  hover:text-orange focus:outline-none transition"
             aria-label="Menu"
           >
             {isOpen ? (
@@ -155,7 +157,7 @@ export default function Navbar() {
                   className={`block px-4 py-4 rounded-lg text-base font-medium transition ${
                     pathname === item.href 
                       ? "bg-orange/10 text-orange border-l-4 border-orange" 
-                      : "text-white hover:bg-gray-800/50"
+                      : "text-[#EAE2B7]  hover:bg-gray-800/50"
                   }`}
                 >
                   {item.label}
@@ -169,7 +171,7 @@ export default function Navbar() {
                   className={`flex items-center justify-between w-full px-4 py-4 rounded-lg text-base font-medium transition ${
                     infosOpen || infosDropdownItems.some(item => pathname === item.href) 
                       ? "bg-orange/10 text-orange" 
-                      : "text-white hover:bg-gray-800/50"
+                      : "text-[#EAE2B7]  hover:bg-gray-800/50"
                   }`}
                 >
                   Infos
@@ -198,7 +200,7 @@ export default function Navbar() {
                           className={`block px-4 py-3 rounded-lg text-base font-medium transition ${
                             pathname === item.href 
                               ? "bg-orange/10 text-orange" 
-                              : "text-white hover:bg-gray-800/50"
+                              : "text-[#EAE2B7]  hover:bg-gray-800/50"
                           }`}
                         >
                           {item.label}
