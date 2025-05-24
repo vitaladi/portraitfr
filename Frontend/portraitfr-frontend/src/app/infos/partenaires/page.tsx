@@ -19,7 +19,13 @@ const partenaires = [
     description: "Studio de production spécialisé en photographie et vidéo",
     image: "/autresphotos/dreamz.jpg",
     lien: "https://www.instagram.com/dreamzproduction.fr/"
-  }
+  },{
+    nom: "360 ShootParis",
+    description: "Service spécialisé dans le Vidéobooth événementiel",
+    image: "/autresphotos/360shoot.jpg",
+    lien: "https://www.instagram.com/360shootparis/"
+  },
+
 ]
 
 const GlareCard = ({
